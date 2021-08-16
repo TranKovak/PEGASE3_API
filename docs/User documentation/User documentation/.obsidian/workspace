@@ -1,0 +1,102 @@
+{
+  "main": {
+    "id": "ef4397a4c68de909",
+    "type": "split",
+    "children": [
+      {
+        "id": "c7d6640f84503452",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Fields.md",
+            "mode": "preview"
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "d8dce85c58fc3233",
+    "type": "split",
+    "children": [
+      {
+        "id": "0efb0d0281a7dc48",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "04471d076e69200d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "4c891b81b5b72c43",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "95c483d5fbfd509e",
+    "type": "split",
+    "children": [
+      {
+        "id": "35b2b489d74e4b26",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "642fde5c82bba3da",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Fields.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "c7d6640f84503452",
+  "lastOpenFiles": [
+    "Fields.md",
+    "Report/Details.md",
+    "Report/Info.md",
+    "Report/List.md",
+    "Company/Sections.md",
+    "Company/Info.md",
+    "Common API code.md",
+    "Other/Login.md",
+    "Sans titre.md",
+    "Company/Holidays.md"
+  ]
+}

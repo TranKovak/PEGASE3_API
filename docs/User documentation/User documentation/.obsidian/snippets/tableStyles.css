@@ -1,0 +1,42 @@
+.wideTable table {
+	min-width: 100%;
+}
+
+/* --------------------------------------------   */
+/* blueTable  table                               */
+/* --------------------------------------------   */
+.blueTable table {
+	border-collapse: collapse;
+}
+.blueTable table thead th {
+	padding: 15px 20px;
+	background: #72C2FE;
+}
+.blueTable td,
+.blueTable th {
+	border: 1px solid #ffffff;
+	padding: 10px 20px;
+}
+.blueTable table td {
+	background: #f1f1f1;
+	font-size: 13px;
+	color: #666666;
+	word-wrap: break-word;
+}
+.blueTable thead th:hover {
+    background-color: #72C2FE !important;
+}
+.blueTable tbody tr:hover td,
+.blueTable tbody tr:hover td strong,
+.blueTables tbody tr:hover td a {
+	background-color: #DAC195 !important;
+	color: black;
+}
+/* --------------------------------------------   */
+
+
+
+
+
+
+
