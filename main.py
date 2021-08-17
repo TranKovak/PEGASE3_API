@@ -25,13 +25,13 @@ def signup():
     if headers['Password'] != config['super_user']['password'] or headers['User-Name'] != config['super_user']['user-name']:
         return jsonify({'status': 'error', 'code': 401, 'message': 'Super user doesn\'t exists.'})
 
-    for user in config['users']:
+    for user in config_users['users']:
         logger.warning(user)
         if user['name'] == headers['New-User-Name']:
             return jsonify({'status': 'error', 'code': 400, 'message': 'User already exists.'})
 
-    config['users'].append({'name': headers['New-User-Name'], 'password': headers['New-User-Password']})
-    dump_configuration(config)
+    config_users['users'].append({'name': headers['New-User-Name'], 'password': headers['New-User-Password']})
+    dump_configuration(config_users)
     return jsonify({'status': 'ok', 'code': 201, 'message': 'User created.'})
 
 
@@ -43,10 +43,10 @@ def login():
         return jsonify(checked_headers)
 
     if auth and auth['Password'] and auth['User-Name']:
-        for user in config['users']:
+        for user in config_users['users']:
             logger.warning(user)
             if user['password'] == auth['Password'] and user['name'] == auth['User-Name']:
-                token = jwt.encode({'user': auth['User-Name'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)}, app.config['SECRET_KEY'])
+                token = jwt.encode({'user': auth['User-Name'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=config['token']['duration'])}, app.config['SECRET_KEY'])
                 return jsonify({'status': 'ok', 'code': 200, 'token': token})
     return jsonify({'message': 'Password or User-Name not correct.', 'code': 401, 'status': 'error'})
 

@@ -8,8 +8,9 @@ from sqlalchemy import create_engine, types
 from exporter.configuration_manager import *
 
 conn_p3 = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=10.11.5.3;DATABASE=Pegase3prod;UID=P3_READONLY;PWD=ENz49ilPK8GcJQfp5VRP')
-dump_configuration()
+# dump_configuration()
 configuration = load_configuration()
+logger.debug(configuration)
 engine = create_engine('mysql://root:root@localhost:3310/pegase3')
 
 

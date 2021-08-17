@@ -2,18 +2,19 @@
 from loguru import logger
 from sqlalchemy import types
 
+import json
 import pickle
 
 
 def dump_configuration(config: dict = None):
     companies = ["617", "754"]
     if config is None:
-        configuration = {"fields": {"SOCIETE": ["IDSOCIETE", "NOMSOCIETE", "ADR1", "ADR2", "ADR3", "ADRCPOST", "ADRBDIST", "NUMSIREN", "NAF", "CODETABPRINCIPAL", "DATFINVALIDITE", "DATDEBVALIDITE"],
+        configuration = {"fields": {"SOCIETE": ["IDSOCIETE", "CODSOCIETE", "NOMSOCIETE", "ADR1", "ADR2", "ADR3", "ADRCPOST", "ADRBDIST", "NUMSIREN", "NAF", "CODETABPRINCIPAL", "DATFINVALIDITE", "DATDEBVALIDITE"],
                                     "ETABLISSEMENTS": ["IDSOCIETE", "CODETAB", "NOMETAB", "ADR1", "ADR2", "ADR3", "ADRCPOST", "ADRBDIST", "NIC", "NAF", "NOMRESP", "QUALITERESP", "NOMSIGNATAIRE", "QUALITESIGNATAIRE", "DATFINVALIDITE", "DATDEBVALIDITE"],
                                     "SALARIES": ["IDSOCIETE", "NOM", "PRENOM", "ADR1", "ADR2", "ADR3", "ADRCPOST", "ADRBDIST", "NUMSECU", "EMPLOI", "CODSALARIE", "DATANCIENNETE", "DATFINVALIDITE", "DATDEBVALIDITE"],
                                     "BULLETINS": ["IDSOCIETE", "CODETAB", "CODSALARIE", "CODEXERCICE", "CODPERIODE", "DATDEBUTPAIE", "DATFINPAIE", "DATREMISEPAIE"],
                                     "BULLETINSDETAIL": ["IDSOCIETE", "CODETAB", "CODSALARIE", "CODEXERCICE", "CODPERIODE", "CODBULLETIN", "CODRUBRIQUE", "NOM"],
-                                    "RUBRIQUES": ["IDSOCIETE", "CODRUBRIQUE", "CODPROFIL", "NOM", "ZONEBULLETIN"],
+                                    "RUBRIQUES": ["IDSOCIETE", "CODRUBRIQUE", "CODPROFIL", "NOM", "ZONEBULLETIN", "DATFINVALIDITE", "DATDEBVALIDITE"],
                                     "JOURSFERIES_NAT": ["DATEJF"]},
                          "dtypes": {"SOCIETE": {"IDSOCIETE": types.Integer, "NOMSOCIETE": types.VARCHAR(length=50), "ADR1": types.VARCHAR(length=32), "ADR2": types.VARCHAR(length=32), "ADR3": types.VARCHAR(length=32), "ADRCPOST": types.VARCHAR(length=5), "ADRBDIST": types.VARCHAR(length=26), "NUMSIREN": types.VARCHAR(length=9), "NAF": types.VARCHAR(length=5), "CODETABPRINCIPAL": types.VARCHAR(length=5), "DATFINVALIDITE": types.DateTime, "DATDEBVALIDITE": types.DateTime},
                                     "ETABLISSEMENTS": {"IDSOCIETE": types.Integer, "CODETAB": types.VARCHAR(length=5), "NOMETAB": types.VARCHAR(length=50), "ADR1": types.VARCHAR(length=32), "ADR2": types.VARCHAR(length=32), "ADR3": types.VARCHAR(length=32), "ADRCPOST": types.VARCHAR(length=5), "ADRBDIST": types.VARCHAR(length=26), "NIC": types.VARCHAR(length=5), "NAF": types.VARCHAR(length=5), "NOMRESP": types.VARCHAR(length=30), "QUALITERESP": types.VARCHAR(length=30), "NOMSIGNATAIRE": types.VARCHAR(length=30), "QUALITESIGNATAIRE": types.VARCHAR(length=30), "DATFINVALIDITE": types.DateTime, "DATDEBVALIDITE": types.DateTime},
