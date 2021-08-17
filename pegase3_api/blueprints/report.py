@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+import os.path
+import re
+
 from loguru import logger
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_from_directory, current_app
 
+from main import app
 from pegase3_api.routes_tools import *
 from pegase3_api.global_variables import *
 from pegase3_api.query_manager import query_creator
@@ -37,9 +41,9 @@ def report_list():
     query = query_creator(fields=fields, table='BULLETINS', extra=extra)
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 404
     info = date_to_timestamp(info)
-    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 200
 
 
 @bp.route('/info', methods=['GET'])
@@ -72,9 +76,9 @@ def report_info():
     query = query_creator(fields=fields, table='BULLETINS', extra=extra)
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 404
     info = date_to_timestamp(info)
-    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 200
 
 
 @bp.route('/details', methods=['GET'])
@@ -100,7 +104,7 @@ def report_details():
     query = query_creator(fields=fields, table='BULLETINSDETAIL', extra=extra)
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 404
 
     data = dict()
     for i in info:
@@ -115,6 +119,47 @@ def report_details():
             data[i['CODSALARIE']][i['CODEXERCICE']][i['CODPERIODE']] = list()
         data[i['CODSALARIE']][i['CODEXERCICE']][i['CODPERIODE']].append(i)
     data = date_to_timestamp(data)
-    return jsonify({"status": "success", "code": 200, "data": data, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": data, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 200
 
 
+@bp.route('/get_report', methods=['GET'])
+def get_report():
+    logger.info('report_send_report')
+    headers = request.headers
+    checked_headers = check_headers(headers=headers, route_name="report/send_report")
+    if checked_headers['status'] == 'error':
+        return jsonify(checked_headers), checked_headers['code']
+
+    token_verification = verify_token(headers['Token'])
+    if len(token_verification) > 0:
+        return jsonify(token_verification), token_verification["code"]
+
+    if not os.path.isfile(current_app.config['CLIENT_REPORT'] + headers['File-Name']):
+        return jsonify({"code": 404, "status": "error", "message": f"File {headers['File-Name']} not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+
+    return send_from_directory(directory=current_app.config['CLIENT_REPORT'], path=headers['File-Name'], as_attachment=True), 200
+
+
+@bp.route('/find_report', methods=['GET'])
+def find_report():
+    logger.info('report_find_file')
+    headers = request.headers
+    checked_headers = check_headers(headers=headers, route_name="report/find_report")
+    if checked_headers['status'] == 'error':
+        return jsonify(checked_headers), checked_headers['code']
+
+    token_verification = verify_token(headers['Token'])
+    if len(token_verification) > 0:
+        return jsonify(token_verification), token_verification["code"]
+
+    re_file = ''
+    if "File-Name" in headers.keys():
+        re_file = headers["File-Name"]
+    directory_content = os.listdir(current_app.config['CLIENT_REPORT'])
+    files = []
+    for file in directory_content:
+        if os.path.isfile(current_app.config['CLIENT_REPORT'] + file):
+            if len(re.findall(re_file, file)) > 0:
+                logger.debug(file)
+                files.append(file)
+    return jsonify({"code": 200, "status": "success", "data": files, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404

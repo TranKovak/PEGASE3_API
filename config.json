@@ -158,6 +158,13 @@
       "Months",
       "Id-Employees",
       "Token"
+    ],
+    "report/send_report": [
+      "Token",
+      "File-Name"
+    ],
+    "report/find_report": [
+      "Token"
     ]
   },
   "token": {
@@ -167,5 +174,8 @@
   "super_user": {
     "user-name": "SUPER USER",
     "password": "SUPER PASSWORD"
+  },
+  "path": {
+    "report_directory": "./"
   }
 }

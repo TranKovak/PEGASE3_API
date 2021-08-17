@@ -14,6 +14,7 @@ if __name__ == '__main__':
     logger.debug('main')
 
     app.config['SECRET_KEY'] = 'WEB_SERVICE_API'
+    app.config['CLIENT_REPORT'] = "C:/Users/GMercadal/Documents/TranKovak/PEGASE3_API/"
     app.register_blueprint(report.bp)
     app.register_blueprint(company.bp)
     app.register_blueprint(employee.bp)
