@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, types
 from exporter.configuration_manager import *
 
 conn_p3 = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=10.11.5.3;DATABASE=Pegase3prod;UID=P3_READONLY;PWD=ENz49ilPK8GcJQfp5VRP')
-# dump_configuration()
+dump_configuration()
 configuration = load_configuration()
 logger.debug(configuration)
 engine = create_engine('mysql://root:root@localhost:3310/pegase3')
@@ -115,10 +115,10 @@ def mssql_exporter(query, table, if_exists, dtype):
 
 if __name__ == '__main__':
     logger.debug('main')
-    sections_exporter(configuration['fields']['RUBRIQUES'], configuration['companies'], configuration['dtypes']['RUBRIQUES'])
-    company_exporter(configuration['fields']['SOCIETE'], configuration['dtypes']['SOCIETE'])
+    # sections_exporter(configuration['fields']['RUBRIQUES'], configuration['companies'], configuration['dtypes']['RUBRIQUES'])
+    # company_exporter(configuration['fields']['SOCIETE'], configuration['dtypes']['SOCIETE'])
     employee_exporter(configuration['fields']['SALARIES'], configuration['dtypes']['SALARIES'])
     establishment_exporter(configuration['fields']['ETABLISSEMENTS'], configuration['dtypes']['ETABLISSEMENTS'])
-    report_exporter(configuration['fields']['BULLETINS'], configuration['companies'], configuration['dtypes']['BULLETINS'])
-    report_details_exporter(configuration['fields']['BULLETINSDETAIL'], configuration['companies'], configuration['dtypes']['BULLETINSDETAIL'])
-    holidays_exporter(configuration['fields']['JOURSFERIES_NAT'], configuration['dtypes']['JOURSFERIES_NAT'])
+    # report_exporter(configuration['fields']['BULLETINS'], configuration['companies'], configuration['dtypes']['BULLETINS'])
+    # report_details_exporter(configuration['fields']['BULLETINSDETAIL'], configuration['companies'], configuration['dtypes']['BULLETINSDETAIL'])
+    # holidays_exporter(configuration['fields']['JOURSFERIES_NAT'], configuration['dtypes']['JOURSFERIES_NAT'])

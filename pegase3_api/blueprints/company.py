@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 
 from pegase3_api.routes_tools import *
 from pegase3_api.global_variables import *
@@ -21,7 +21,6 @@ def company_info():
     token_verification = verify_token(headers['Token'])
     if len(token_verification) > 0:
         return jsonify(token_verification), token_verification["code"]
-    token_to_blacklist(headers['Token'])
 
     fields = create_fields('Company', headers)
     if fields['status'] == 'error':
@@ -30,9 +29,9 @@ def company_info():
     query = query_creator(fields=fields, table='SOCIETE', validity_date=True, extra=[f"CODSOCIETE = '{headers['Name-Company']}'"])
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'], headers['Token'])}), 404
     info[0] = date_to_timestamp(info[0])
-    return jsonify({"status": "success", "code": 200, "data": info[0], "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": info[0], "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'], headers['Token'])}), 200
 
 
 @bp.route('/holidays', methods=['GET'])
@@ -58,11 +57,11 @@ def company_holidays():
     query = query_creator(fields=fields['data'], table='JOURSFERIES_NAT', validity_date=False, extra=extra)
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'], headers['Token'])}), 404
 
     info = date_to_timestamp(info)
 
-    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'], headers['Token'])}), 200
 
 
 @bp.route('/sections', methods=['GET'])
@@ -91,6 +90,6 @@ def company_sections():
     for i in info:
         sections[i['CODRUBRIQUE']] = i
     if len(sections) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'], headers['Token'])}), 404
     sections = date_to_timestamp(sections)
-    return jsonify({"status": "success", "code": 200, "data": sections, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": sections, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'], headers['Token'])}), 200

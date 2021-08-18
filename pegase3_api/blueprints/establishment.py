@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from loguru import logger
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 
 from pegase3_api.routes_tools import *
 from pegase3_api.global_variables import *
@@ -26,9 +26,9 @@ def establishment_list():
     query = query_creator(fields=fields, table='ETABLISSEMENTS', validity_date=True, extra=[f"IDSOCIETE = {headers['Id-Company']}"])
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 404
     info = date_to_timestamp(info)
-    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 200
 
 
 @bp.route('/info', methods=['GET'])
@@ -52,6 +52,6 @@ def establishment_info():
                                                                                             f"CODETAB in ({', '.join(establishments_id)})"])
     info = execute_and_format_query(query=query, cursor=cursor_mysql)
     if len(info) == 0:
-        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 404
+        return jsonify({"status": "error", "code": 404, "message": "Data not found.", "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 404
     info = date_to_timestamp(info)
-    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], 'WEB_SERVICE_API', algorithms='HS256')['user'])}), 200
+    return jsonify({"status": "success", "code": 200, "data": info, "token": create_token(jwt.decode(headers['Token'], current_app.config['SECRET_KEY'], algorithms='HS256')['user'])}), 200

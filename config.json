@@ -29,6 +29,7 @@
     ],
     "Employee": [
       "NOM",
+      "CODETAB",
       "PRENOM",
       "ADR1",
       "ADR2",
